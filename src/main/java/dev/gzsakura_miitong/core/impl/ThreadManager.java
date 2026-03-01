@@ -102,13 +102,13 @@ implements Wrapper {
                 try {
                     while (true) {
                         if (ThreadManager.this.tickRunning) {
-                            Thread.sleep(1);
+                            Thread.sleep(5);
                             continue;
                         }
                         AutoCrystal.INSTANCE.onThread();
                         HoleESP.INSTANCE.onThread();
                         AutoAnchor.INSTANCE.onThread();
-                        Thread.sleep(1);
+                        Thread.sleep(10);
                     }
                 }
                 catch (InterruptedException ie) {

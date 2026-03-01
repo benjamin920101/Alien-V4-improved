@@ -80,7 +80,7 @@ implements Closeable {
             this.put('F', 0xFFFFFF);
         }
     };
-    private static final ExecutorService ASYNC_WORKER = Executors.newCachedThreadPool();
+    private static final ExecutorService ASYNC_WORKER = Executors.newFixedThreadPool(Math.max(1, Runtime.getRuntime().availableProcessors() / 2));
     private final Object2ObjectMap<Identifier, ObjectList<DrawEntry>> GLYPH_PAGE_CACHE = new Object2ObjectOpenHashMap<>();
     private final float originalSize;
     private final ObjectList<GlyphMap> maps = new ObjectArrayList();
