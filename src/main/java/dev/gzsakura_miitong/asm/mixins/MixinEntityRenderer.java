@@ -31,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinEntityRenderer<T extends Entity> {
     @Inject(method={"renderLabelIfPresent"}, at={@At(value="HEAD")}, cancellable=true)
     private void onRenderLabel(T entity, Text text, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, float tickDelta, CallbackInfo ci) {
-        if (entity instanceof PlayerEntity && NameTags.INSTANCE.isOn()) {
+        if (entity instanceof PlayerEntity && NameTags.INSTANCE != null && NameTags.INSTANCE.isOn()) {
             ci.cancel();
         }
     }
