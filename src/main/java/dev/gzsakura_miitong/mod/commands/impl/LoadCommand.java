@@ -25,10 +25,9 @@ extends Command {
         }
         this.sendChatMessage("\u00a7fLoading..");
         ConfigManager.options = Manager.getFile("cfg" + File.separator + parameters[0] + ".cfg");
-        Alien.CONFIG = new ConfigManager();
+        Alien.CONFIG.read();
         Alien.CONFIG.load();
         ConfigManager.options = Manager.getFile("options.txt");
-        Alien.save();
         Fonts.INSTANCE.refresh();
     }
 

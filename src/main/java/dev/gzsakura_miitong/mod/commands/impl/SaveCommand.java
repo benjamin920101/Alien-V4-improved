@@ -29,8 +29,8 @@ extends Command {
             ConfigManager.options = Manager.getFile("options.txt");
         } else {
             this.sendChatMessage("\u00a7fSaving..");
+            Alien.save();
         }
-        Alien.save();
     }
 
     @Override
