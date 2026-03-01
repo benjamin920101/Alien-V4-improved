@@ -35,7 +35,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class ThreadManager
 implements Wrapper {
-    public static final ExecutorService EXECUTOR = Executors.newCachedThreadPool();
+    public static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(Math.max(2, Runtime.getRuntime().availableProcessors() - 1));
     public static ClientService clientService;
     public volatile Iterable<Entity> threadSafeEntityList = Collections.emptyList();
     public volatile List<AbstractClientPlayerEntity> threadSafePlayersList = Collections.emptyList();
@@ -102,19 +102,25 @@ implements Wrapper {
                 try {
                     while (true) {
                         if (ThreadManager.this.tickRunning) {
-                            Thread.onSpinWait();
+                            Thread.sleep(1);
                             continue;
                         }
                         AutoCrystal.INSTANCE.onThread();
                         HoleESP.INSTANCE.onThread();
                         AutoAnchor.INSTANCE.onThread();
+                        Thread.sleep(1);
                     }
+                }
+                catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    return;
                 }
                 catch (Exception e) {
                     e.printStackTrace();
                     if (ClientSetting.INSTANCE.debug.getValue()) {
                         CommandManager.sendMessage("\u00a74An error has occurred [Thread] Message: [" + e.getMessage() + "]");
                     }
+                    try { Thread.sleep(50); } catch (InterruptedException ignored) { Thread.currentThread().interrupt(); return; }
                 }
             }
         }

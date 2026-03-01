@@ -271,11 +271,19 @@ implements Wrapper {
         });
     }
 
+    private long lastShaderReloadAttempt = 0;
+    private static final long SHADER_RELOAD_COOLDOWN_MS = 5000;
+
     public boolean fullNullCheck() {
         if (GRADIENT == null || SMOKE == null || DEFAULT == null || FLOW == null || RAINBOW == null || PULSE == null || PULSE_OUTLINE == null || GRADIENT_OUTLINE == null || SMOKE_OUTLINE == null || DEFAULT_OUTLINE == null || FLOW_OUTLINE == null || RAINBOW_OUTLINE == null || this.shaderBuffer == null) {
             if (mc.getFramebuffer() == null) {
                 return true;
             }
+            long now = System.currentTimeMillis();
+            if (now - this.lastShaderReloadAttempt < SHADER_RELOAD_COOLDOWN_MS) {
+                return true;
+            }
+            this.lastShaderReloadAttempt = now;
             this.shaderBuffer = new MyFramebuffer(ShaderManager.mc.getFramebuffer().textureWidth, ShaderManager.mc.getFramebuffer().textureHeight);
             this.reloadShaders();
             return true;

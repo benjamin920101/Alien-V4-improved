@@ -3,18 +3,21 @@
  */
 package dev.gzsakura_miitong.core.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class FPSManager {
-    private final List<Long> records = new ArrayList<Long>();
+    private final Deque<Long> records = new ArrayDeque<Long>();
 
     public void record() {
-        this.records.add(System.currentTimeMillis());
+        this.records.addLast(System.currentTimeMillis());
     }
 
     public int getFps() {
-        this.records.removeIf(aLong -> aLong + 1000L < System.currentTimeMillis());
+        long cutoff = System.currentTimeMillis() - 1000L;
+        while (!this.records.isEmpty() && this.records.peekFirst() < cutoff) {
+            this.records.pollFirst();
+        }
         return this.records.size();
     }
 }

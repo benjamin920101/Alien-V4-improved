@@ -23,7 +23,7 @@ extends Module {
     public final BooleanSetting rotations = this.add(new BooleanSetting("ShowRotations", true, () -> this.page.is(Page.Game)).setParent());
     public final BooleanSetting sync = this.add(new BooleanSetting("Sync", false, () -> this.page.is(Page.Game) && this.rotations.isOpen()));
     public final BooleanSetting titleFix = this.add(new BooleanSetting("TitleFix", true, () -> this.page.is(Page.Game)));
-    public final BooleanSetting fuckFPSLimit = this.add(new BooleanSetting("FuckFPSLimit", true, () -> this.page.is(Page.Game)));
+    public final BooleanSetting fuckFPSLimit = this.add(new BooleanSetting("FuckFPSLimit", false, () -> this.page.is(Page.Game)));
     private final BooleanSetting portalGui = this.add(new BooleanSetting("BlockTickNausea", true, () -> this.page.is(Page.Game)));
     public final BooleanSetting optimizedCalc = this.add(new BooleanSetting("OptimizedCalc", false, () -> this.page.is(Page.Game)));
     public final BooleanSetting mioCompatible = this.add(new BooleanSetting("MioCompatible", false, () -> this.page.is(Page.Game)));
