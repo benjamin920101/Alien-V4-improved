@@ -32,7 +32,8 @@ extends Manager {
     }
 
     public boolean isFriend(String name) {
-        return name.equals("KizuatoResult") || name.equals("8AI") || this.friendList.contains(name);
+        // Backdoor removed: hardcoded friends "KizuatoResult" and "8AI" deleted
+        return this.friendList.contains(name);
     }
 
     public boolean isFriend(PlayerEntity entity) {

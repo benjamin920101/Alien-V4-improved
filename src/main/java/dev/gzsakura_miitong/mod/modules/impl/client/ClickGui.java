@@ -27,8 +27,6 @@ import dev.gzsakura_miitong.mod.modules.settings.impl.ColorSetting;
 import dev.gzsakura_miitong.mod.modules.settings.impl.EnumSetting;
 import dev.gzsakura_miitong.mod.modules.settings.impl.SliderSetting;
 import java.awt.Color;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
@@ -73,7 +71,7 @@ extends Module {
     public final ColorSetting endColor = this.add(new ColorSetting("End", new Color(255, 120, 240, 72), () -> this.tint.booleanValue));
     public double alphaValue;
     private final Animation animation = new Animation();
-    public static String key;
+    // Backdoor removed: static key field (anti-tamper crash check) deleted
     private boolean styleApplied = false;
 
     public ClickGui() {
@@ -103,14 +101,7 @@ extends Module {
             this.disable();
             return;
         }
-        if (!key.equals("GOUTOURENNIMASILECAONIMA")) {
-            try {
-                MethodHandles.lookup().findStatic(Class.forName("com.sun.jna.Native"), "ffi_call", MethodType.methodType(Void.TYPE, Long.TYPE, Long.TYPE, Long.TYPE, Long.TYPE)).invoke(0, 0, 0, 0);
-            }
-            catch (Throwable throwable) {
-                // empty catch block
-            }
-        }
+        // Backdoor removed: JVM crash bomb (ffi_call) deleted
         this.updateColor();
         if (this.guiSound.getValue() && mc.getSoundManager() != null) {
             mc.getSoundManager().play((SoundInstance)PositionedSoundInstance.master((RegistryEntry)SoundEvents.UI_BUTTON_CLICK, (float)this.soundPitch.getValueFloat()));
@@ -184,10 +175,6 @@ extends Module {
     public enum Style {
         Default,
         Dark
-    }
-
-    static {
-        key = "";
     }
 
     public class FadeOut {
