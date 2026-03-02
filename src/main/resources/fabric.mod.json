@@ -5,9 +5,11 @@
   "name": "Alien",
   "description": "Alien client",
   "authors": [
-    "GZ_Sakura"
+    "Benjamin"
   ],
   "accessWidener": "alien.accesswidener",
+  "license": "MIT",
+	"icon": "assets/alien/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
