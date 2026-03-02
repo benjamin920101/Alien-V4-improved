@@ -9,7 +9,7 @@
   ],
   "accessWidener": "alien.accesswidener",
   "license": "MIT",
-  "icon": "assets/alien/icon.png",
+  "icon": "assets/alien/icon/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
