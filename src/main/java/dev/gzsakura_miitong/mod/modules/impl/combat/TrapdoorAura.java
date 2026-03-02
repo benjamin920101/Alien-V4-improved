@@ -105,10 +105,9 @@ public class TrapdoorAura extends Module {
     /* ────────────────── 生命週期 ────────────────── */
 
     @Override
-    public boolean onEnable() {
+    public void onEnable() {
         this.target = null;
         reset();
-        return false;
     }
 
     @Override
@@ -443,7 +442,6 @@ public class TrapdoorAura extends Module {
         return null;
     }
 
-    @Override
     public String getStatus() {
         if (this.currentTarget == null) return "\u7b49\u5f85\u76ee\u6807"; // 等待目標
         return this.waitingClose ? "\u5173\u95ed\u7b49\u5f85\u4e2d" : "\u6fc0\u6d3b\u4e2d"; // 關閉等待中 : 激活中
