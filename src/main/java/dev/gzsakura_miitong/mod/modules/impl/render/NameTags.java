@@ -134,7 +134,7 @@ extends Module {
         double eyeY = y + (double)entity.getHeight() + (double)(entity.isSneaking() ? 0.4f : 0.43f) + (double)this.heightConfig.getValueFloat();
         float scale = (float)((double)(-0.025f * this.scaleConfig.getValueFloat()) + (this.factorConfig.getValue() && pos.squaredDistanceTo(x, eyeY, z) > (double)(this.distanceConfig.getValueFloat() * this.distanceConfig.getValueFloat()) ? (Math.sqrt(pos.squaredDistanceTo(x, eyeY, z)) - (double)this.distanceConfig.getValueFloat()) * (double)-0.0025f * (double)this.scalingConfig.getValueFloat() : 0.0));
         matrices.push();
-        // 只跟随 yaw，让它像「立着的牌子」，不会随抬头低头翻面
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0f));
         matrices.translate(x - pos.getX(), eyeY - pos.getY() + (double)((scale / -0.025f - 1.0f) / 4.0f), z - pos.getZ());
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-camera.getYaw()));
