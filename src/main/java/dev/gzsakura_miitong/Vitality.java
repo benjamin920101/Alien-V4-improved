@@ -41,7 +41,7 @@ import net.minecraft.client.MinecraftClient;
 public class Vitality
 implements ModInitializer {
     public static final String NAME = "Alien";
-    public static final String VERSION = "4.2.1";
+    public static final String VERSION = "5.0.3";
     public static final EventBus EVENT_BUS = new EventBus();
     public static HoleManager HOLE;
     public static PlayerManager PLAYER;
