@@ -59,6 +59,7 @@ import dev.gzsakura_miitong.mod.modules.impl.combat.PistonCrystal;
 import dev.gzsakura_miitong.mod.modules.impl.combat.Quiver;
 import dev.gzsakura_miitong.mod.modules.impl.combat.SelfTrap;
 import dev.gzsakura_miitong.mod.modules.impl.combat.Surround;
+import dev.gzsakura_miitong.mod.modules.impl.combat.TrapdoorAura;
 import dev.gzsakura_miitong.mod.modules.impl.exploit.AntiHunger;
 import dev.gzsakura_miitong.mod.modules.impl.exploit.AntiPacket;
 import dev.gzsakura_miitong.mod.modules.impl.exploit.Blink;
@@ -318,6 +319,7 @@ implements Wrapper {
         this.addModule(new Strafe());
         this.addModule(new Step());
         this.addModule(new Surround());
+        this.addModule(new TrapdoorAura());
         this.addModule(new TotemParticle());
         this.addModule(new Velocity());
         this.addModule(new ViewModel());
