@@ -138,8 +138,7 @@ extends Module {
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0f));
         matrices.translate(x - pos.getX(), eyeY - pos.getY() + (double)((scale / -0.025f - 1.0f) / 4.0f), z - pos.getZ());
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-camera.getYaw()));
-        // ↓ 新增：抵消 Pitch 旋轉，讓長方形完整 billboard 面向玩家螢幕
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-camera.getPitch()));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
         matrices.scale(scale, scale, -1.0f);
         if (this.rectConfig.booleanValue) {
             float f = -width - 2.0f;
@@ -156,6 +155,8 @@ extends Module {
     private void drawWithShadow(MatrixStack matrices, String info, float x, float y, int color) {
         VertexConsumerProvider.Immediate immediate = mc.getBufferBuilders().getEntityVertexConsumers();
         NameTags.mc.textRenderer.draw(info, x, y, color, true, matrices.peek().getPositionMatrix(), (VertexConsumerProvider)immediate, TextRenderer.TextLayerType.SEE_THROUGH, 0, 0xF000F0);
+        immediate.draw();
+        NameTags.mc.textRenderer.draw(info, x, y, color, false, matrices.peek().getPositionMatrix(), (VertexConsumerProvider)immediate, TextRenderer.TextLayerType.SEE_THROUGH, 0, 0xF000F0);
         immediate.draw();
     }
 
@@ -370,4 +371,3 @@ extends Module {
         return this.colorConfig.getValue().getRGB();
     }
 }
-
