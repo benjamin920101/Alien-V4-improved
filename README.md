@@ -41,7 +41,7 @@ The original codebase had several design issues causing **constant 100% CPU usag
 | 1 | 🔴 Critical | **`ClientService` busy loop** — double `while(true)` with no sleep; `Thread.onSpinWait()` does NOT yield CPU time | `ThreadManager.java` | Added `Thread.sleep(10)` after each iteration (5ms when waiting for tick); properly handle `InterruptedException`; add 50ms cooldown on error recovery |
 | 2 | 🟠 High | **FPS limiter disabled by default** — `FuckFPSLimit` defaulted to `true`, removing Minecraft's frame rate cap entirely | `ClientSetting.java` | Changed default to `false` so Minecraft's native FPS limiter is active by default |
 | 3 | 🟠 High | **Unbounded thread pools** — `Executors.newCachedThreadPool()` can spawn unlimited threads | `ThreadManager.java`, `ChunkESP.java`, `FontRenderer.java` | Replaced with `Executors.newFixedThreadPool()` bounded to CPU core count |
-| 4 | 🟡 Medium | **Shader reload storm** — `fullNullCheck()` reloads all 14 shaders every frame if any initialization fails | `ShaderManager.java` | Added 5-second cooldown between shader reload attempts |
+| 4 | deleted🟡 Medium | **Shader reload storm** — `fullNullCheck()` reloads all 14 shaders every frame if any initialization fails | `ShaderManager.java` | Added 5-second cooldown between shader reload attempts |
 | 5 | 🟡 Medium | **Inefficient FPS counter** — `ArrayList.removeIf()` scans entire list every frame (O(n)) | `FPSManager.java` | Replaced with `ArrayDeque` + head-polling (O(1) amortized), exploiting monotonic timestamps |
 
 ### Details
