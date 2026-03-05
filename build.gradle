@@ -32,6 +32,8 @@ dependencies {
 //    include name: 'IAS-Fabric-1.21.1-9.0.2'
 //    include name: 'baritone-api-fabric-1.21.1-1.11.2'
     include name: 'satin-2.0.0'
+    compileOnly "org.lwjgl:lwjgl-glfw:3.3.1"
+    compileOnly "org.lwjgl:lwjgl-opengl:3.3.1"
 }
 
 processResources {
