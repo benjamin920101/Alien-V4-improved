@@ -10,6 +10,7 @@
 package satin.impl;
 
 import com.mojang.logging.LogUtils;
+import com.mojang.blaze3d.systems.RenderSystem;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,6 +47,18 @@ implements UniformFinder {
     }
 
     public void initializeOrLog(ResourceFactory mgr) {
+        // 如果尚未在 render thread，將初始化排到 render thread 執行，避免在沒有 GL context 時 parse/setup shader
+        if (!RenderSystem.isOnRenderThread()) {
+            RenderSystem.recordRenderCall(() -> {
+                try {
+                    this.initialize(mgr);
+                } catch (IOException e) {
+                    this.errored = true;
+                    this.logInitError(e);
+                }
+            });
+            return;
+        }
         try {
             this.initialize(mgr);
         }
