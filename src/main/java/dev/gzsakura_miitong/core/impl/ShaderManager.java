@@ -16,6 +16,7 @@ package dev.gzsakura_miitong.core.impl;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.logging.LogUtils;
 import dev.gzsakura_miitong.api.interfaces.IShaderEffectHook;
 import dev.gzsakura_miitong.api.utils.Wrapper;
 import dev.gzsakura_miitong.api.utils.math.Timer;
@@ -206,101 +207,108 @@ implements Wrapper {
     }
 
     public void reloadShaders() {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        // 確保 shader 資源建立在 render thread（有 GL context）執行
-        RenderSystem.recordRenderCall(() -> {
-            DEFAULT = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/outline.json"));
-            SMOKE = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/smoke.json"));
-            GRADIENT = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/gradient.json"));
-            SNOW = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/snow.json"));
-            FLOW = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/flow.json"));
-            RAINBOW = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/rainbow.json"));
-            PULSE = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/pulse.json"));
-            DEFAULT_OUTLINE = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/outline.json"), managedShaderEffect -> {
-                PostEffectProcessor effect = managedShaderEffect.getShaderEffect();
-                if (effect == null) {
-                    return;
-                }
-                MinecraftClient mc2 = MinecraftClient.getInstance();
-                if (mc2.worldRenderer == null) return;
-                Framebuffer fb = mc2.worldRenderer.getEntityOutlinesFramebuffer();
-                if (fb == null) return;
-                ((IShaderEffectHook)effect).alienClient$addHook("bufIn", fb);
-                ((IShaderEffectHook)effect).alienClient$addHook("bufOut", fb);
-            });
-            PULSE_OUTLINE = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/pulse.json"), managedShaderEffect -> {
-                PostEffectProcessor effect = managedShaderEffect.getShaderEffect();
-                if (effect == null) {
-                    return;
-                }
-                MinecraftClient mc2 = MinecraftClient.getInstance();
-                if (mc2.worldRenderer == null) return;
-                Framebuffer fb = mc2.worldRenderer.getEntityOutlinesFramebuffer();
-                if (fb == null) return;
-                ((IShaderEffectHook)effect).alienClient$addHook("bufIn", fb);
-                ((IShaderEffectHook)effect).alienClient$addHook("bufOut", fb);
-            });
-            SMOKE_OUTLINE = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/smoke.json"), managedShaderEffect -> {
-                PostEffectProcessor effect = managedShaderEffect.getShaderEffect();
-                if (effect == null) {
-                    return;
-                }
-                MinecraftClient mc2 = MinecraftClient.getInstance();
-                if (mc2.worldRenderer == null) return;
-                Framebuffer fb = mc2.worldRenderer.getEntityOutlinesFramebuffer();
-                if (fb == null) return;
-                ((IShaderEffectHook)effect).alienClient$addHook("bufIn", fb);
-                ((IShaderEffectHook)effect).alienClient$addHook("bufOut", fb);
-            });
-            GRADIENT_OUTLINE = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/gradient.json"), managedShaderEffect -> {
-                PostEffectProcessor effect = managedShaderEffect.getShaderEffect();
-                if (effect == null) {
-                    return;
-                }
-                MinecraftClient mc2 = MinecraftClient.getInstance();
-                if (mc2.worldRenderer == null) return;
-                Framebuffer fb = mc2.worldRenderer.getEntityOutlinesFramebuffer();
-                if (fb == null) return;
-                ((IShaderEffectHook)effect).alienClient$addHook("bufIn", fb);
-                ((IShaderEffectHook)effect).alienClient$addHook("bufOut", fb);
-            });
-            SNOW_OUTLINE = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/snow.json"), managedShaderEffect -> {
-                PostEffectProcessor effect = managedShaderEffect.getShaderEffect();
-                if (effect == null) {
-                    return;
-                }
-                MinecraftClient mc2 = MinecraftClient.getInstance();
-                if (mc2.worldRenderer == null) return;
-                Framebuffer fb = mc2.worldRenderer.getEntityOutlinesFramebuffer();
-                if (fb == null) return;
-                ((IShaderEffectHook)effect).alienClient$addHook("bufIn", fb);
-                ((IShaderEffectHook)effect).alienClient$addHook("bufOut", fb);
-            });
-            FLOW_OUTLINE = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/flow.json"), managedShaderEffect -> {
-                PostEffectProcessor effect = managedShaderEffect.getShaderEffect();
-                if (effect == null) {
-                    return;
-                }
-                MinecraftClient mc2 = MinecraftClient.getInstance();
-                if (mc2.worldRenderer == null) return;
-                Framebuffer fb = mc2.worldRenderer.getEntityOutlinesFramebuffer();
-                if (fb == null) return;
-                ((IShaderEffectHook)effect).alienClient$addHook("bufIn", fb);
-                ((IShaderEffectHook)effect).alienClient$addHook("bufOut", fb);
-            });
-            RAINBOW_OUTLINE = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/rainbow.json"), managedShaderEffect -> {
-                PostEffectProcessor effect = managedShaderEffect.getShaderEffect();
-                if (effect == null) {
-                    return;
-                }
-                MinecraftClient mc2 = MinecraftClient.getInstance();
-                if (mc2.worldRenderer == null) return;
-                Framebuffer fb = mc2.worldRenderer.getEntityOutlinesFramebuffer();
-                if (fb == null) return;
-                ((IShaderEffectHook)effect).alienClient$addHook("bufIn", fb);
-                ((IShaderEffectHook)effect).alienClient$addHook("bufOut", fb);
-            });
-        });
+        Runnable r = () -> {
+            try {
+                DEFAULT = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/outline.json"));
+                SMOKE = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/smoke.json"));
+                GRADIENT = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/gradient.json"));
+                SNOW = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/snow.json"));
+                FLOW = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/flow.json"));
+                RAINBOW = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/rainbow.json"));
+                PULSE = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/pulse.json"));
+                DEFAULT_OUTLINE = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/outline.json"), managedShaderEffect -> {
+                    PostEffectProcessor effect = managedShaderEffect.getShaderEffect();
+                    if (effect == null) {
+                        return;
+                    }
+                    MinecraftClient mc2 = MinecraftClient.getInstance();
+                    if (mc2.worldRenderer == null) return;
+                    Framebuffer fb = mc2.worldRenderer.getEntityOutlinesFramebuffer();
+                    if (fb == null) return;
+                    ((IShaderEffectHook)effect).alienClient$addHook("bufIn", fb);
+                    ((IShaderEffectHook)effect).alienClient$addHook("bufOut", fb);
+                });
+                PULSE_OUTLINE = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/pulse.json"), managedShaderEffect -> {
+                    PostEffectProcessor effect = managedShaderEffect.getShaderEffect();
+                    if (effect == null) {
+                        return;
+                    }
+                    MinecraftClient mc2 = MinecraftClient.getInstance();
+                    if (mc2.worldRenderer == null) return;
+                    Framebuffer fb = mc2.worldRenderer.getEntityOutlinesFramebuffer();
+                    if (fb == null) return;
+                    ((IShaderEffectHook)effect).alienClient$addHook("bufIn", fb);
+                    ((IShaderEffectHook)effect).alienClient$addHook("bufOut", fb);
+                });
+                SMOKE_OUTLINE = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/smoke.json"), managedShaderEffect -> {
+                    PostEffectProcessor effect = managedShaderEffect.getShaderEffect();
+                    if (effect == null) {
+                        return;
+                    }
+                    MinecraftClient mc2 = MinecraftClient.getInstance();
+                    if (mc2.worldRenderer == null) return;
+                    Framebuffer fb = mc2.worldRenderer.getEntityOutlinesFramebuffer();
+                    if (fb == null) return;
+                    ((IShaderEffectHook)effect).alienClient$addHook("bufIn", fb);
+                    ((IShaderEffectHook)effect).alienClient$addHook("bufOut", fb);
+                });
+                GRADIENT_OUTLINE = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/gradient.json"), managedShaderEffect -> {
+                    PostEffectProcessor effect = managedShaderEffect.getShaderEffect();
+                    if (effect == null) {
+                        return;
+                    }
+                    MinecraftClient mc2 = MinecraftClient.getInstance();
+                    if (mc2.worldRenderer == null) return;
+                    Framebuffer fb = mc2.worldRenderer.getEntityOutlinesFramebuffer();
+                    if (fb == null) return;
+                    ((IShaderEffectHook)effect).alienClient$addHook("bufIn", fb);
+                    ((IShaderEffectHook)effect).alienClient$addHook("bufOut", fb);
+                });
+                SNOW_OUTLINE = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/snow.json"), managedShaderEffect -> {
+                    PostEffectProcessor effect = managedShaderEffect.getShaderEffect();
+                    if (effect == null) {
+                        return;
+                    }
+                    MinecraftClient mc2 = MinecraftClient.getInstance();
+                    if (mc2.worldRenderer == null) return;
+                    Framebuffer fb = mc2.worldRenderer.getEntityOutlinesFramebuffer();
+                    if (fb == null) return;
+                    ((IShaderEffectHook)effect).alienClient$addHook("bufIn", fb);
+                    ((IShaderEffectHook)effect).alienClient$addHook("bufOut", fb);
+                });
+                FLOW_OUTLINE = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/flow.json"), managedShaderEffect -> {
+                    PostEffectProcessor effect = managedShaderEffect.getShaderEffect();
+                    if (effect == null) {
+                        return;
+                    }
+                    MinecraftClient mc2 = MinecraftClient.getInstance();
+                    if (mc2.worldRenderer == null) return;
+                    Framebuffer fb = mc2.worldRenderer.getEntityOutlinesFramebuffer();
+                    if (fb == null) return;
+                    ((IShaderEffectHook)effect).alienClient$addHook("bufIn", fb);
+                    ((IShaderEffectHook)effect).alienClient$addHook("bufOut", fb);
+                });
+                RAINBOW_OUTLINE = ShaderEffectManager.getInstance().manage(Identifier.of("shaders/post/rainbow.json"), managedShaderEffect -> {
+                    PostEffectProcessor effect = managedShaderEffect.getShaderEffect();
+                    if (effect == null) {
+                        return;
+                    }
+                    MinecraftClient mc2 = MinecraftClient.getInstance();
+                    if (mc2.worldRenderer == null) return;
+                    Framebuffer fb = mc2.worldRenderer.getEntityOutlinesFramebuffer();
+                    if (fb == null) return;
+                    ((IShaderEffectHook)effect).alienClient$addHook("bufIn", fb);
+                    ((IShaderEffectHook)effect).alienClient$addHook("bufOut", fb);
+                });
+            } catch (Exception e) {
+                LogUtils.getLogger().error("Failed to reload shaders", (Throwable)e);
+            }
+        };
+        if (RenderSystem.isOnRenderThread()) {
+            r.run();
+        } else {
+            RenderSystem.recordRenderCall(r);
+        }
     }
 
 
