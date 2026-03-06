@@ -208,8 +208,7 @@ extends Module {
     }
 
     public BlockPos getPos() {
-        if (Velocity.mc.world == null || Velocity.mc.player == null) return null;
-        if (dev.gzsakura_miitong.api.utils.world.BlockUtil.getBlock(Velocity.mc.player.getBlockPos().down()) == Blocks.OBSIDIAN) {
+        if (Velocity.mc.world.getBlockState(Velocity.mc.player.getBlockPos().down()).getBlock() == Blocks.OBSIDIAN) {
             return Velocity.mc.player.getBlockPos().down();
         }
         return null;

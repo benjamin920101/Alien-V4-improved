@@ -151,7 +151,6 @@ extends Module {
         for (int i = 0; i < 300; ++i) {
             Vec3d lastPos = new Vec3d(x, y, z);
             if (Trajectories.mc.world.getBlockState(new BlockPos((int)(x += motionX), (int)(y += motionY), (int)(z += motionZ))).getBlock() == Blocks.WATER) {
-            if (dev.gzsakura_miitong.api.utils.world.BlockUtil.safeGetBlockState(new BlockPos((int)(x += motionX), (int)(y += motionY), (int)(z += motionZ))).getBlock() == Blocks.WATER) {
                 motionX *= 0.8;
                 motionY *= 0.8;
                 motionZ *= 0.8;

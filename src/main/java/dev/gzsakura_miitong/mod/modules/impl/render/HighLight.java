@@ -56,7 +56,6 @@ extends Module {
 
     @Override
     public void onRender3D(MatrixStack matrixStack) {
-        if (HighLight.mc.world == null || HighLight.mc.crosshairTarget == null) return;
         HitResult hitResult;
         if (HighLight.mc.crosshairTarget.getType() == HitResult.Type.BLOCK && (hitResult = HighLight.mc.crosshairTarget) instanceof BlockHitResult) {
             BlockHitResult hitResult2 = (BlockHitResult)hitResult;
@@ -67,9 +66,10 @@ extends Module {
                 float r;
                 float keyCodec;
                 Color color;
-                net.minecraft.block.BlockState state = dev.gzsakura_miitong.api.utils.world.BlockUtil.safeGetBlockState(hitResult2.getBlockPos());
-                if (state == null) return;
-                VoxelShape shape = state.getOutlineShape((BlockView)HighLight.mc.world, hitResult2.getBlockPos());
+                VoxelShape shape = HighLight.mc.world.getBlockState(hitResult2.getBlockPos()).getOutlineShape((BlockView)HighLight.mc.world, hitResult2.getBlockPos());
+                if (shape == null) {
+                    return;
+                }
                 if (shape.isEmpty()) {
                     return;
                 }

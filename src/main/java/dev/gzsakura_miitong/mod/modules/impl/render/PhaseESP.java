@@ -53,9 +53,6 @@ extends Module {
 
     @EventListener
     public void onUpdate(UpdateEvent event) {
-        if (PhaseESP.mc.world == null || PhaseESP.mc.player == null) {
-            return;
-        }
         this.safe.clear();
         this.semiSafe.clear();
         this.unsafe.clear();
@@ -66,10 +63,10 @@ extends Module {
                 double d = PhaseESP.mc.player.getPos().distanceTo(pos.toBottomCenterPos());
                 double d2 = x != 0 && z != 0 ? this.bevelDistance.getValue() + 1.0 : this.getDistance.getValue() + 0.8;
                 if (!(d <= d2)) continue;
-                BlockState blockState = dev.gzsakura_miitong.api.utils.world.BlockUtil.safeGetBlockState(pos);
+                BlockState blockState = PhaseESP.mc.world.getBlockState(pos);
                 BlockPos downPos = pos.down();
                 if (blockState.getBlock() == Blocks.BEDROCK) {
-                    downBlock = dev.gzsakura_miitong.api.utils.world.BlockUtil.getBlock(downPos);
+                    downBlock = PhaseESP.mc.world.getBlockState(downPos).getBlock();
                     if (downBlock == Blocks.BEDROCK) {
                         this.safe.add(pos);
                         continue;

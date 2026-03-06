@@ -76,7 +76,7 @@ extends Module {
     }
 
     public void onThread() {
-        if (HoleESP.nullCheck() || this.isOff() || HoleESP.mc.world == null || HoleESP.mc.player == null) {
+        if (HoleESP.nullCheck() || this.isOff()) {
             return;
         }
         if (!this.drawing && this.timer.passedMs(this.updateDelay.getValue())) {
@@ -135,7 +135,7 @@ extends Module {
     }
 
     private boolean isBedrock(BlockPos pos) {
-        return dev.gzsakura_miitong.api.utils.world.BlockUtil.getBlock(pos) == Blocks.BEDROCK;
+        return HoleESP.mc.world.getBlockState(pos).getBlock() == Blocks.BEDROCK;
     }
 
     Type isHole(BlockPos pos) {
