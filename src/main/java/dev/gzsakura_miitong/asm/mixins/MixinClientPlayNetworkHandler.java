@@ -72,6 +72,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.logging.LogUtils;
+import dev.gzsakura_miitong.core.impl.ShaderManager;
 
 @Mixin(value={ClientPlayNetworkHandler.class})
 public abstract class MixinClientPlayNetworkHandler
@@ -101,6 +104,21 @@ extends ClientCommonNetworkHandler {
     private void onGameJoinTail(GameJoinS2CPacket packet, CallbackInfo info) {
         if (this.alien$worldNotNull) {
             Vitality.EVENT_BUS.post(GameLeftEvent.INSTANCE);
+        }
+        try {
+            if (Vitality.SHADER != null) {
+                RenderSystem.recordRenderCall(() -> {
+                    try {
+                        MinecraftClient mc = MinecraftClient.getInstance();
+                        if (mc.getFramebuffer() == null || mc.worldRenderer == null || mc.worldRenderer.getEntityOutlinesFramebuffer() == null) return;
+                        Vitality.SHADER.reloadShaders();
+                    } catch (Exception e) {
+                        LogUtils.getLogger().warn("Failed to reload shaders on world join", (Throwable)e);
+                    }
+                });
+            }
+        } catch (Throwable t) {
+            LogUtils.getLogger().warn("Shader reload scheduling failed", t);
         }
     }
 
