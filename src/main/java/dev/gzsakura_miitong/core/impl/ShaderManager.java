@@ -206,6 +206,7 @@ implements Wrapper {
             effect.setUniformValue("time", this.time);
             effect.render(mc.getRenderTickCounter().getTickDelta(true));
         }
+        }
         catch (Exception e) {
             LogUtils.getLogger().warn("Failed to setup shader {}: {}", shader, e.toString());
             return;
