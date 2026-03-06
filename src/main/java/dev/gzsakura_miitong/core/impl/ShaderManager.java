@@ -122,9 +122,11 @@ implements Wrapper {
     }
 
     public void setupShader(Shader shader, ManagedShaderEffect effect) {
+        if (effect == null) return;
         ShaderModule module = ShaderModule.INSTANCE;
         Color color = module.fill.getValue();
         this.time = (float)timer.getMs() / 5.0f * module.speed.getValueFloat() * 0.004f;
+        try {
         if (shader == Shader.Rainbow) {
             effect.setUniformValue("alpha2", (float)color.getAlpha() / 255.0f);
             effect.setUniformValue("radius", module.radius.getValueFloat());
@@ -203,6 +205,9 @@ implements Wrapper {
             effect.setUniformValue("resolution", mc.getWindow().getScaledWidth(), mc.getWindow().getScaledHeight());
             effect.setUniformValue("time", this.time);
             effect.render(mc.getRenderTickCounter().getTickDelta(true));
+        } catch (Exception e) {
+            LogUtils.getLogger().warn("Failed to setup shader {}: {}", shader, e.toString());
+            return;
         }
     }
 
