@@ -307,7 +307,7 @@ implements Wrapper {
         if (RenderSystem.isOnRenderThread()) {
             r.run();
         } else {
-            RenderSystem.recordRenderCall(r);
+            RenderSystem.recordRenderCall(() -> r.run());
         }
     }
 
