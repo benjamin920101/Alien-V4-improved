@@ -575,7 +575,8 @@ implements Wrapper {
     }
 
     public static Block getBlock(BlockPos pos) {
-        return BlockUtil.mc.world.getBlockState(pos).getBlock();
+        BlockState state = safeGetBlockState(pos);
+        return state.getBlock();
     }
 
     public static boolean canReplace(BlockPos pos) {
@@ -585,7 +586,7 @@ implements Wrapper {
         if (AntiCheat.INSTANCE.multiPlace.getValue() && placedPos.contains(pos)) {
             return false;
         }
-        BlockState state = BlockUtil.mc.world.getBlockState(pos);
+        BlockState state = safeGetBlockState(pos);
         if (state.getBlock() == Blocks.COBWEB && AutoWeb.ignore && AutoCrystal.INSTANCE.replace.getValue()) {
             return true;
         }
@@ -596,12 +597,31 @@ implements Wrapper {
         if (AntiCheat.INSTANCE.multiPlace.getValue() && placedPos.contains(pos)) {
             return true;
         }
-        BlockState state = BlockUtil.mc.world.getBlockState(pos);
+        BlockState state = safeGetBlockState(pos);
         Block block = state.getBlock();
         if (block == Blocks.COBWEB && AutoWeb.ignore) {
             return AutoCrystal.INSTANCE.airPlace.getValue();
         }
         return BlockUtil.mc.player.isSneaking() || !BlockUtil.isClickable(block);
+    }
+
+    public static BlockState safeGetBlockState(BlockPos pos) {
+        try {
+            if (BlockUtil.mc == null || BlockUtil.mc.world == null || pos == null) {
+                return Blocks.AIR.getDefaultState();
+            }
+            BlockState s = BlockUtil.mc.world.getBlockState(pos);
+            if (s == null) {
+                return Blocks.AIR.getDefaultState();
+            }
+            return s;
+        } catch (Throwable t) {
+            return Blocks.AIR.getDefaultState();
+        }
+    }
+
+    public static Block safeGetBlock(BlockPos pos) {
+        return safeGetBlockState(pos).getBlock();
     }
 
     public static boolean isClickable(Block block) {
